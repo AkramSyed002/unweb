@@ -1,0 +1,21 @@
+/* input[type='time']::-webkit-calendar-picker-indicator { */
+/* display: none; */
+/* color: red; */
+/* -webkit-appearance: none; */
+/* } */
+
+/* ::-webkit-calendar-picker-indicator {
+  filter: invert(24%) sepia(85%) saturate(8000%) hue-rotate(200deg);
+} */
+::-webkit-calendar-picker-indicator {
+  filter: invert(24%) sepia(85%) saturate(8000%) hue-rotate(200deg);
+  left: 0px;
+  position: absolute;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+input[type='time'].MuiInputBase-input.MuiOutlinedInput-input {
+  margin-left: 30px;
+  /* background-color: red; */
+}

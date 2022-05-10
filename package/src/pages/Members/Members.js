@@ -1,0 +1,123 @@
+import React, { useEffect, useState } from "react";
+import Grid from "@material-ui/core/Grid";
+import { IconButton, InputBase, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+
+import SearchIcon from "@material-ui/icons/Search";
+import MembersTabs from "../../components/members/MembersTabs";
+import { useAppContext } from "../../context/AppContext";
+
+const RenderHeader = ({ classes, onSearch }) => (
+  <Grid item container alignItems="center">
+    <Paper component="form" className={classes.root}>
+      <InputBase
+        className={classes.input}
+        placeholder="Search"
+        inputProps={{ "aria-label": "search" }}
+        onChange={({ target }) => onSearch(target.value)}
+      />
+      <IconButton
+        type="submit"
+        className={classes.iconButton}
+        aria-label="search"
+      >
+        <SearchIcon style={{ color: "#5EA0E0" }} />
+      </IconButton>
+    </Paper>
+  </Grid>
+);
+
+let membersArrayHolder = [];
+const Members = () => {
+  const classes = useStyles();
+  const [searchTab, setSearchTab] = useState("Active Users");
+  const { members } = useAppContext();
+  const [activeMembers, setActiveMembers] = useState(members);
+  const [pendingMembers, setPendingMembers] = useState(members);
+  const [cancelledMembers, setCancelledMembers] = useState(members);
+
+  useEffect(() => {
+    setActiveMembers(members);
+    setPendingMembers(members);
+    setCancelledMembers(members);
+  }, [members]);
+
+  membersArrayHolder = members;
+
+  const searchFilterFunction = (text) => {
+    if (searchTab === "Active Users") {
+      const newData = membersArrayHolder.filter((item) => {
+        const itemData =
+          `${item.phone_number} ${item.email} ${item.first_name} ${item.last_name} ${item.tags} `.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setActiveMembers(newData);
+    } else {
+      const newData = membersArrayHolder.filter((item) => {
+        const itemData =
+          `${item.phone_number} ${item.email} ${item.first_name} ${item.last_name} ${item.tags} `.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setPendingMembers(newData);
+    }
+  };
+
+  return (
+    <Grid container direction="column" className={classes.mainContainer}>
+      <RenderHeader classes={classes} onSearch={searchFilterFunction} />
+      <Typography className={classes.subTitle}>MEMBERS</Typography>
+      <Typography className={classes.title}>Manage members</Typography>
+      <MembersTabs
+        onTabChange={(value) => setSearchTab(value)}
+        activeMembers={activeMembers}
+        pendingMembers={pendingMembers}
+        cancelledMembers={cancelledMembers}
+      />
+    </Grid>
+  );
+};
+
+export default Members;
+
+const useStyles = makeStyles((theme) => ({
+  mainContainer: {
+    paddingLeft: 223,
+  },
+  root: {
+    display: "flex",
+    alignItems: "center",
+    width: 335,
+    height: 50,
+    marginTop: 20,
+    marginLeft: 40,
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+    color: "#000",
+  },
+  iconButton: {
+    padding: 10,
+  },
+  title: {
+    color: "#353535",
+    fontWeight: 700,
+    fontSize: 34,
+    // marginTop: 40,
+    marginLeft: 40,
+    fontFamily: "Avenir",
+    fontStyle: "normal",
+  },
+  subTitle: {
+    marginLeft: 40,
+    marginTop: 40,
+    color: "#C0C0C0",
+    fontFamily: "Avenir",
+    fontStyle: "normal",
+    fontWeight: 500,
+    fontSize: 13,
+    lineHeight: "130%",
+  },
+}));
